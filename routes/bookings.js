@@ -1,6 +1,12 @@
+
 const express = require("express");
 const router = express.Router();
 const db = require("../db");
+
+const {
+    validateBooking,
+    validateStatus
+} = require("../validation");
 
 // GET all bookings
 router.get("/", (req, res) => {
@@ -11,6 +17,57 @@ router.get("/", (req, res) => {
 
         res.json(rows);
     });
+});
+
+// UPDATE booking status
+router.patch("/:id/status", validateStatus, (req, res) => {
+    const { id } = req.params;
+    const { status } = req.body;
+
+    db.get(
+        "SELECT * FROM bookings WHERE id = ?",
+        [id],
+        (err, booking) => {
+            if (err) {
+                return res.status(500).json({ error: err.message });
+            }
+
+            if (!booking) {
+                return res.status(404).json({
+                    message: "Booking not found"
+                });
+            }
+
+            const allowedTransitions = {
+                pending: "approved",
+                approved: "done"
+            };
+
+            if (allowedTransitions[booking.status] !== status) {
+                return res.status(400).json({
+                    error: `Invalid status transition from ${booking.status} to ${status}`
+                });
+            }
+
+            db.run(
+                "UPDATE bookings SET status = ? WHERE id = ?",
+                [status, id],
+                function (err) {
+                    if (err) {
+                        return res.status(500).json({
+                            error: err.message
+                        });
+                    }
+
+                    res.json({
+                        message: "Booking status updated successfully",
+                        bookingId: Number(id),
+                        status: status
+                    });
+                }
+            );
+        }
+    );
 });
 
 // GET booking by ID
@@ -26,7 +83,9 @@ router.get("/:id", (req, res) => {
             }
 
             if (!row) {
-                return res.status(404).json({ message: "Booking not found" });
+                return res.status(404).json({
+                    message: "Booking not found"
+                });
             }
 
             res.json(row);
@@ -35,7 +94,7 @@ router.get("/:id", (req, res) => {
 });
 
 // POST create booking
-router.post("/", (req, res) => {
+router.post("/", validateBooking, (req, res) => {
     const { guest_id, game_id } = req.body;
 
     db.run(

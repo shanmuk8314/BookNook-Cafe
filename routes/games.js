@@ -2,6 +2,7 @@
 const express = require("express");
 const router = express.Router();
 const db = require("../db");
+const { validateGame } = require("../validation");
 
 // GET all games
 router.get("/", (req, res) => {
@@ -36,7 +37,7 @@ router.get("/:id", (req, res) => {
 });
 
 // POST create a game
-router.post("/", (req, res) => {
+router.post("/", validateGame, (req, res) => {
     const { name, players } = req.body;
 
     db.run(
@@ -56,7 +57,7 @@ router.post("/", (req, res) => {
 });
 
 // PUT update a game
-router.put("/:id", (req, res) => {
+router.put("/:id", validateGame, (req, res) => {
     const { id } = req.params;
     const { name, players } = req.body;
 
