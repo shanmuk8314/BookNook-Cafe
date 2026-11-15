@@ -8,6 +8,32 @@ const {
     validateStatus
 } = require("../validation");
 
+// GET booking details using SQL JOIN
+router.get("/details", (req, res) => {
+    const query = `
+        SELECT
+            bookings.id AS booking_id,
+            guests.name AS guest_name,
+            guests.email AS guest_email,
+            games.name AS game_name,
+            games.players AS players,
+            bookings.status AS booking_status
+        FROM bookings
+        JOIN guests ON bookings.guest_id = guests.id
+        JOIN games ON bookings.game_id = games.id
+    `;
+
+    db.all(query, [], (err, rows) => {
+        if (err) {
+            return res.status(500).json({
+                error: err.message
+            });
+        }
+
+        res.json(rows);
+    });
+});
+
 // GET all bookings
 router.get("/", (req, res) => {
     db.all("SELECT * FROM bookings", [], (err, rows) => {
