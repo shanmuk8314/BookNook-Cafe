@@ -1,0 +1,155 @@
+{
+  "info": {
+    "name": "BookNook Cafe API",
+    "description": "API collection for testing the BookNook Cafe backend.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Server",
+      "item": [
+        {
+          "name": "Welcome",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Bookings",
+      "item": [
+        {
+          "name": "Get All Bookings",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/bookings"
+          }
+        },
+        {
+          "name": "Get Booking by ID",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/bookings/{{bookingId}}"
+          }
+        },
+        {
+          "name": "Get Booking Details (JOIN)",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/bookings/details"
+          }
+        },
+        {
+          "name": "Create Booking",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"guest_id\": 1,\n  \"game_id\": 1\n}"
+            },
+            "url": "{{baseUrl}}/bookings"
+          }
+        },
+        {
+          "name": "Update Booking Status",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"approved\"\n}"
+            },
+            "url": "{{baseUrl}}/bookings/{{bookingId}}/status"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Games",
+      "item": [
+        {
+          "name": "Get All Games",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/games"
+          }
+        },
+        {
+          "name": "Get Game by ID",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/games/{{gameId}}"
+          }
+        },
+        {
+          "name": "Create Game",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Test Game\",\n  \"players\": 4\n}"
+            },
+            "url": "{{baseUrl}}/games"
+          }
+        },
+        {
+          "name": "Update Game",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Updated Test Game\",\n  \"players\": 4\n}"
+            },
+            "url": "{{baseUrl}}/games/{{gameId}}"
+          }
+        },
+        {
+          "name": "Delete Game",
+          "request": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/games/{{gameId}}"
+          }
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:3000"
+    },
+    {
+      "key": "bookingId",
+      "value": "8"
+    },
+    {
+      "key": "gameId",
+      "value": "6"
+    }
+  ]
+}
